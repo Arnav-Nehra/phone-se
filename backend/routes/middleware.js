@@ -7,6 +7,7 @@ const authMiddleware=(req,res,next)=>{
     if(!authHeader || !authHeader.startsWith('Bearer')){
         return res.status(403).json({})
     }
+
     const token = authHeader.split(" ")[1];
 
     try{
@@ -23,3 +24,4 @@ const authMiddleware=(req,res,next)=>{
         return res.status(403).json({})
     }
 }
+module.exports={authMiddleware}
