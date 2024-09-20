@@ -1,8 +1,9 @@
 const express = require('express')
-const router = express.Router()
 const zod = require('zod')
-const { JWT_SECRET } = require('../config')
-const authMiddleware=require('./middleware');
+const JWT_SECRET= "user"
+const {authMiddleware}=require('../middleware');
+const router = express.Router()
+
 const signupSchema = zod.object({
     username:zod.string(),
     password:zod.string(),
@@ -120,4 +121,4 @@ router.get("/bulk",async(req,res)=>{
     }))
    })
 })
-module.exports = {router}
+module.exports=router

@@ -1,4 +1,4 @@
-const {JWT_SECRET}=require("./config")
+const JWT_SECRET="user"
 const jwt=require("jsonwebtoken")
 
 const authMiddleware=(req,res,next)=>{
@@ -12,16 +12,13 @@ const authMiddleware=(req,res,next)=>{
 
     try{
         const decoded=jwt.verify(token,JWT_SECRET)
-        if(decoded.userId){
            req.userId=decoded.userId
            next()
-        }
-        else{
-            return res.status(403).json({})
-        }
     }
     catch(err){
         return res.status(403).json({})
     }
 }
-module.exports={authMiddleware}
+module.exports={
+    authMiddleware
+}
