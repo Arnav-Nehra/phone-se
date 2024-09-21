@@ -2,7 +2,7 @@ const mongoose=require('mongoose')
 
 mongoose.connect('mongodb+srv://arnavnehra1:GgbMNEKSDql7B3po@cluster0.rue5u.mongodb.net/paytm')
 
-const UserSchema=mongoose.Schema({
+const UserSchema= new mongoose.Schema({
     username:{
         type:String,
         required:true,
@@ -12,13 +12,13 @@ const UserSchema=mongoose.Schema({
         minLength:3,
         maxLength:30
     },
-    firstname:{
+    firstName:{
         type:String,
         required:true,
         trim:true,
         maxLength:50,
     },
-    lastname:{
+    lastName:{
         type:String,
         required:true,
         trim:true,
@@ -31,10 +31,11 @@ const UserSchema=mongoose.Schema({
     }
 })
 
-const AccountsSchema = mongoose.Schema({ 
+const AccountsSchema = new mongoose.Schema({ 
     userId:{
-        type:String,
-        required:true,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required:true
     },    
     balance:{
         type:Number,

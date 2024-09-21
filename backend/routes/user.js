@@ -1,28 +1,32 @@
 const express = require('express')
-const zod = require('zod')
-const JWT_SECRET= "user"
-const {authMiddleware}=require('../middleware');
 const router = express.Router()
+const zod = require('zod')
+const { User, Account } = require("../db");
+const jwt = require("jsonwebtoken");
+const JWT_SECRET= require("../config")
+const {authMiddleware}=require('../middleware');
 
-const signupSchema = zod.object({
-    username:zod.string(),
+const signupBody = zod.object({
+    username:zod.string().email(),
     password:zod.string(),
     firstName:zod.string(),
     lastName:zod.string()
 })
-router.post("./signup",async(req,res)=>{
-    const {success} = signupSchema.safeParse(req.body)
+
+router.post("/signup",async(req,res)=>{
+    const {success} = signupBody.safeParse(req.body)  
+    console.log(success)
     if(!success){
         res.status(411).json({
             message: "email already taken / Incorrect Inputs"
         })
     }
-    const user = await User.findOne({
-        username: req.body.username
+    const existingUser = await User.findOne({
+        username:req.body.username
     })
-    if(user.__id){
-        return res.json({
-            message: "email already taken/ incorrect inputs"
+    if(existingUser){
+        return res.status(411).json({
+            message: "email already taken"
         })
     }
 
@@ -32,14 +36,13 @@ router.post("./signup",async(req,res)=>{
         firstName: req.body.firstName,
         lastName: req.body.lastName
     });
-
-    const userId = dbUser.__id
+    const userid=dbUser._id
     await Account.create({
-        userId,
+        userId:userid,
         balance:1+Math.random()*10000
     }) 
     const token = jwt.sign({
-        userId: userId
+        userid
     }, JWT_SECRET)
     res.json({
         message: "User Created successfully",
@@ -52,7 +55,7 @@ const signinBody = zod.object({
     password:zod.string()
 })
 
-router.post('/siginin',async(req,res)=>{
+router.post('/signin',async(req,res)=>{
     const {success} = signinBody.safeParse(req.body)
     if(!success){
         res.status(411).json({
@@ -77,23 +80,26 @@ router.post('/siginin',async(req,res)=>{
     })
 
 })
-const updatedBody = zod.object({
-    password: zod.string().optional(),
+const updateBody = zod.object({
+	password: zod.string().optional(),
     firstName: zod.string().optional(),
-    lastName: zod.string().optional()
+    lastName: zod.string().optional(),
 })
-router.use("./update",authMiddleware,async(req,res)=>{
-    const {success}=updatedBody.safeParse(req.body)
-    if(!success){
+
+router.put("/", authMiddleware, async (req, res) => {
+    const { success } = updateBody.safeParse(req.body)
+    if (!success) {
         res.status(411).json({
-            message:"error while updating information"
+            message: "Error while updating information"
         })
     }
-    await User.udpateOne(req.body,{
-        __id:req.userId
+
+    await User.updateOne(req.body, {
+        _id: req.userId
     })
+
     res.json({
-        message:"updated successfully"
+        message: "Updated successfully"
     })
 })
 router.get("/bulk",async(req,res)=>{
