@@ -1,26 +1,22 @@
 const express=require('express')
-
 const {authMiddleware}=require("../middleware")
 const {Account}=require("../db")
-
-const mongoose=require('mongoose')
+const {mongoose}=require('mongoose')
 
 const router=express.Router()
 
 router.get("/balance", authMiddleware, async (req, res) => {
-    const account = await Account.findOne({
-        userId: req.userId
-    });
-
+    const account=await Account.findOne(
+        {userId:req.userid})
     res.json({
-        balance: account.balance
+        balance:account.balance
     })
 });
 router.post("/transfer", authMiddleware, async (req, res) => {
     const { amount, to } = req.body;
 
     const account = await Account.findOne({
-        userId: req.userId
+        userid: req.userid
     });
 
     if (account.balance < amount) {
@@ -30,7 +26,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     }
 
     const toAccount = await Account.findOne({
-        userId: to
+        userid: to
     });
 
     if (!toAccount) {
@@ -40,7 +36,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     }
 
     await Account.updateOne({
-        userId: req.userId
+        userid: req.userid
     }, {
         $inc: {
             balance: -amount
@@ -48,7 +44,7 @@ router.post("/transfer", authMiddleware, async (req, res) => {
     })
 
     await Account.updateOne({
-        userId: to
+        userid: to
     }, {
         $inc: {
             balance: amount

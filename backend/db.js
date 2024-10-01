@@ -43,9 +43,9 @@ const AccountsSchema = new mongoose.Schema({
     }
 }
 )
-
-const User=mongoose.model('User',UserSchema)
 const Account=mongoose.model('Account',AccountsSchema);
+const User=mongoose.model('User',UserSchema)
+
 module.exports={
     User,Account
 }
