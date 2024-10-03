@@ -1,4 +1,4 @@
-export function AppBar({firstName}){
+export default function AppBar({firstName}){
     return<div className=""> 
         <div className="flex justify-between ">
         <div className="flex justify-start px-4 pt-4">
@@ -19,17 +19,5 @@ export function AppBar({firstName}){
     </div>
     </div>
     </div>
-
-
-
-    <div className="px-4 pt-4">
-    <div className="border-solid rounded-md ">
-    <div className="flex justify-center pt-20 text-xl font-mono ">
-    Your one stop point for easy payments
-    </div>
-    <div className="flex justify-center pt-4 text-xl font-mono ">Let's begin..</div></div>
-
-    </div>
-    
     </div>
 }
