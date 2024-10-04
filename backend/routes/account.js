@@ -8,6 +8,9 @@ const router=express.Router()
 router.get("/balance", authMiddleware, async (req, res) => {
     const account=await Account.findOne(
         {userId:req.userid})
+        if(account==null){
+            return 
+        }
     res.json({
         balance:account.balance
     })
