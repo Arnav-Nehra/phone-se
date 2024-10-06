@@ -69,7 +69,7 @@ export const Dashboard = () => {
              focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-1 me-2 mb-2 dark:bg-blue-600
               dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" onClick={async ()=>{
                 let userid="Bearer " + localStorage.getItem("token")
-                console.log(userid)
+                
                 const response = await axios.get("http://localhost:3000/api/v1/account/balance",{
                     headers:{
                         'Authorization':userid

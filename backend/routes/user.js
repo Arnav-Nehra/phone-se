@@ -4,7 +4,7 @@ const zod = require('zod')
 const { User, Account } = require("../db");
 const JWT_SECRET=require("../config").JWT_SECRET
 const jwt = require("jsonwebtoken");
-console.log(JWT_SECRET)
+
 const {authMiddleware}=require('../middleware');
 
 const signupBody = zod.object({
@@ -39,14 +39,16 @@ router.post("/signup",async(req,res)=>{
         firstName: req.body.firstName,
         lastName: req.body.lastName
     });
-    const userid=dbUser._id
+    const userId=dbUser._id
     await Account.create({
-        userId:userid,
+        userId:userId,
         balance:1+Math.random()*10000
     }) 
+
     const token = jwt.sign({
-        userid
+        userId
     },JWT_SECRET)
+
     res.json({
         message: "User Created successfully",
         token: token
@@ -69,14 +71,17 @@ router.post('/signin',async(req,res)=>{
         username:req.body.username,
         password:req.body.password
     })
+   
     if(user){
         const token = jwt.sign({
-            userId:user.__id
+            userId:user._id
         },JWT_SECRET) 
         res.json({
             token:token
         })
+
         return;
+        
     }
     res.status(411).json({
         message:"Error while logging in"

@@ -32,7 +32,7 @@ export const Signin = () => {
               password
             }).catch(function(err){
               if(err.response){
-                console.log(err.response.status)
+            
                 SetInvalidd("Incorrect Username/Password")
               }
             })

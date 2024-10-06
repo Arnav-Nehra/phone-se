@@ -8,8 +8,9 @@ const router=express.Router()
 router.get("/balance", authMiddleware, async (req, res) => {
     const account=await Account.findOne(
         {userId:req.userid})
+        console.log(account)
         if(account==null){
-            return 
+            return res.status(404).json({message:"not found"})
         }
     res.json({
         balance:account.balance

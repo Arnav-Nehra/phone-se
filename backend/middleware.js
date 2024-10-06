@@ -1,7 +1,5 @@
 const jwt=require("jsonwebtoken")
 const JWT_SECRET=require("./config").JWT_SECRET
-console.log(JWT_SECRET)
-
 const authMiddleware=(req,res,next)=>{
     const authHeader=req.headers.authorization;
 
@@ -13,7 +11,8 @@ const authMiddleware=(req,res,next)=>{
 
     try{
         const decoded=jwt.verify(token,JWT_SECRET)
-           req.userid=decoded.userid
+            console.log(decoded)
+           req.userid=decoded.userId 
            next()
     }
     catch(err){
