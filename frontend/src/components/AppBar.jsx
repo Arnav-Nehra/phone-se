@@ -1,4 +1,4 @@
-export default function AppBar({firstName}){
+export function AppBar({firstName}){
     return<div className=""> 
         <div className="flex justify-between ">
         <div className="flex justify-start px-4 pt-4">

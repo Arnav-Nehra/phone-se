@@ -94,21 +94,31 @@ const updateBody = zod.object({
     lastName: zod.string().optional(),
 })
 
-router.put("/", authMiddleware, async (req, res) => {
+router.put("/update", authMiddleware, async (req, res) => {
     const { success } = updateBody.safeParse(req.body)
+    
     if (!success) {
-        res.status(411).json({
+         res.status(411).json({
             message: "Error while updating information"
         })
+        return ;
     }
-
-    await User.updateOne(req.body, {
-        _id: req.userId
+    await User.updateOne(
+        { "_id": req.userid },
+        { $set: req.body }
+    )
+    .then(() => {
+        res.json({
+            message: "Updated successfully"
+        });
     })
-
-    res.json({
-        message: "Updated successfully"
-    })
+    .catch((err) => {
+        res.status(500).json({
+            message: "Error updating!",
+            error: err.message
+        });
+    });
+    
 })
 router.get("/bulk",async(req,res)=>{
     const filter = req.query.filter || ""
